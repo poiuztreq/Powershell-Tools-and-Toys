@@ -37,7 +37,7 @@ while($chatID.length -eq 0){
 $charCodes = @(0x2705, 0x1F4BB, 0x274C, 0x1F55C, 0x1F50D, 0x1F517, 0x23F8)
 $chars = $charCodes | ForEach-Object { [char]::ConvertFromUtf32($_) }
 $tick, $comp, $closed, $waiting, $glass, $cmde, $pause = $chars
-$scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
+#$scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 #$scriptDirectory = Get-Content -Path $PSScriptRoot -Raw
 $Mts = New-Object psobject 
 $Mts | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID

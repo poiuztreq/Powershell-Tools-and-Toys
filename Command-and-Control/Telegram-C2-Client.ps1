@@ -478,8 +478,12 @@ Function Message([string]$Message){
     Write-Output "Done."
 }
 
-Function Shutdown([string]$Message){
-    shutdown.exe * $Message
+Function Neustart{
+    shutdown.exe "-r -f -t 3"
+    Write-Output "Rechner wird neugestartet!"
+}
+Function Herunterfahren{
+    shutdown.exe "-s -f -t 3"
     Write-Output "Rechner wird heruntergefahren!"
 }
 

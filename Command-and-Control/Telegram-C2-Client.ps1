@@ -479,11 +479,11 @@ Function Message([string]$Message){
 }
 
 Function Neustart{
-    shutdown.exe "-r -f -t 3"
+    shutdown.exe -r -f -t 3
     Write-Output "Rechner wird neugestartet!"
 }
 Function Herunterfahren{
-    shutdown.exe "-s -f -t 3"
+    shutdown.exe -s -f -t 3
     Write-Output "Rechner wird heruntergefahren!"
 }
 

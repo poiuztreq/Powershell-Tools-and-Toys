@@ -48,7 +48,8 @@ Function Options{
 $contents = "==============================================
 ============= $cmde Commands List $cmde ============
 ==============================================
-
+Herunterfahren  : Shutdown Computer
+Neustart    : Restart Computer
 Close   : Close this Session
 Extra-Info    : Extra commands information
 Pause-Session   : Kills this session and restarts

